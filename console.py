@@ -45,14 +45,18 @@ class HBNBCommand(cmd.Cmd):
     classes = ["BaseModel"]
 
     def do_quit(self, line):
-        """
-        Quit command to exit the program
+        """Quit command to exit the program
         """
         return True
 
     def do_EOF(self, line):
-        '''EOF command to exit the program'''
+        '''EOF command to exit the program
+        '''
         return True
+
+    def emptyline(self):
+        """ do nothing when an empty line """
+        pass
 
     def do_create(self, line):
         """
