@@ -3,6 +3,7 @@
 import cmd
 import shlex
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
 
@@ -43,7 +44,7 @@ def handle_conditions(classes, full_args):
 class HBNBCommand(cmd.Cmd):
     """ AriBnB Console """
     prompt = '(hbnb) '
-    classes = ["BaseModel"]
+    classes = ["BaseModel", "User"]
 
     def do_quit(self, line):
         """Quit command to exit the program
