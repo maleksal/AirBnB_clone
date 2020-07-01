@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Console code """
 import cmd
+import shlex
 from models.base_model import BaseModel
 from models import storage
 
@@ -129,6 +130,24 @@ class HBNBCommand(cmd.Cmd):
             else:
                 output.append(object.__str__())
         print(output)
+
+    def do_update(self, line):
+        """  Updates an instance based on the class name and id """
+
+        if handle_conditions(self.classes, line):
+            args = shlex.split(line)
+            if len(args) > 2:
+                if len(args) > 3:
+                    key = "{}.{}".format(args[0], args[1])
+                    if key in storage.all():
+                        setattr(storage.all()[key], args[2], args[3])
+                        storage.all()[key].save()
+                    else:
+                        print("** no instance found **")
+                else:
+                    print("** value missing **")
+            else:
+                print("** attribute name missing **")
 
 
 if __name__ == '__main__':
