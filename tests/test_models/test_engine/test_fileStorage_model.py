@@ -1,14 +1,19 @@
+#!/usr/bin/python3
 '''
 Unittests Module for FileStorage class
 
 '''
 import unittest
+import inspect
+import pep8
+import pycodestyle
+import os
 from datetime import datetime
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
 
 
-class TestBaseModel(unittest.TestCase):
+class TestFileStorage(unittest.TestCase):
     """
     test FileStorage
 
@@ -43,6 +48,7 @@ class TestBaseModel(unittest.TestCase):
     def test_method_all(self):
         """ test all method """
         storage = FileStorage()
+
         self.assertEqual(type(storage.all()), dict)
 
 
@@ -59,3 +65,23 @@ class TestFileStorageBaseModel(unittest.TestCase):
         """ BaseModel object shoud be added to FS objects """
         self.assertIn("BaseModel.{}".format(
             self.my_model.id), self.storage.all().keys())
+
+
+class TestBaseModelDocs(unittest.TestCase):
+    """ Test BaseModel documentation """
+
+    @classmethod
+    def setUpClass(cls):
+        """ setup class """
+        cls.base_class = inspect.getmembers(BaseModel, inspect.isfunction)
+
+    def test_for_pep8(self):
+        """ test (base_model & base_model unittests) with PEP8 """
+        fs = ["models/base_model.py", "tests/test_models/test_base_model.py"]
+        for path in fs:
+            with self.subTest(path=path):
+                pep8_return = pycodestyle.Checker(path).check_all()
+                self.assertEqual(pep8_return, 0)
+
+if __name__ == '__main__':
+    unittest.main()

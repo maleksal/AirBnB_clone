@@ -53,10 +53,10 @@ class BaseModel:
         '''
         hold_dictionary = {}
         for key, value in self.__dict__.items():
-                if key in ["updated_at", "created_at"]:
-                    Pythoncode = "self.{}.isoformat()".format(key)
-                    hold_dictionary[key] = eval(Pythoncode)
-                else:
-                    hold_dictionary[key] = value
+            if key in ["updated_at", "created_at"]:
+                Pythoncode = "self.{}.isoformat()".format(key)
+                hold_dictionary[key] = eval(Pythoncode)
+            else:
+                hold_dictionary[key] = value
         hold_dictionary["__class__"] = type(self).__name__
         return hold_dictionary

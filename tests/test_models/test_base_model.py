@@ -97,3 +97,7 @@ class TestBaseModel(unittest.TestCase):
         my_model.save()  # update time
         new_time = my_model.updated_at
         self.assertNotEqual(old_time, new_time)
+
+
+if __name__ == '__main__':
+    unittest.main()
