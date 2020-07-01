@@ -2,6 +2,7 @@
 """ Reviews Module """
 from models.base_model import BaseModel
 
+
 class Reviews(BaseModel):
     """ Reviews Class """
     place_id = ""
