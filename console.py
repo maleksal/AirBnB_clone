@@ -8,7 +8,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.place import Place
-from models.reviews import Reviews
+from models.review import Review
 from models import storage
 
 
@@ -53,7 +53,7 @@ class HBNBCommand(cmd.Cmd):
         "BaseModel", "User",
         'State', 'City',
         'Amenity', 'Place',
-        'Reviews']
+        'Review']
 
     def do_quit(self, line):
         """Quit command to exit the program

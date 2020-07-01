@@ -10,7 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.place import Place
-from models.reviews import Reviews
+from models.review import Review
 
 
 class FileStorage():
