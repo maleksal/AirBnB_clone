@@ -74,7 +74,8 @@ class HBNBCommand(cmd.Cmd):
         advanced_args = {
             ".all()": self.advanced_all,
             ".count()": self.advanced_count,
-            ".show(": self.advanced_show
+            ".show(": self.advanced_show,
+            ".destroy(": self.advanced_destroy
             }
         # check for valid command
         for cmd in advanced_args.keys():
@@ -105,12 +106,22 @@ class HBNBCommand(cmd.Cmd):
     def advanced_show(self, args):
         """
         handle <class_name>.show(<id>)
-        gets class_name instance of specific <id>.
+        gets instance of <class_name> and specific <id>.
 
         """
         args_list = args.split(".show")
         id = args_list[1][2:-2]
         self.do_show("{} {}".format(args_list[0], id))
+
+    def advanced_destroy(self, args):
+        """
+        handle <class_name>.destroy(<id>)
+        deletes instance of specific <class_name> and <id>.
+
+        """
+        args_list = args.split(".destroy")
+        id = args_list[1][2:-2]
+        self.do_destroy("{} {}".format(args_list[0], id))
 
     def do_create(self, line):
         """
