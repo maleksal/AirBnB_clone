@@ -69,6 +69,15 @@ class HBNBCommand(cmd.Cmd):
         """ do nothing when an empty line """
         pass
 
+    def default(self, line):
+        """ Handle advanced args """
+        if '.' not in line:
+            print("*** Unknown syntax: ", line)
+        else:
+            args = line.split('.')
+            if "all()" in line:
+                self.do_all(args[0])
+
     def do_create(self, line):
         """
         Creates a new instance of BaseModel, saves it to the JSON file
