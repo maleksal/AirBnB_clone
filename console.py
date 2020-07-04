@@ -71,12 +71,35 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         """ Handle advanced args """
-        if '.' not in line:
-            print("*** Unknown syntax: ", line)
-        else:
-            args = line.split('.')
-            if "all()" in line:
-                self.do_all(args[0])
+        advanced_args = {
+            ".all()": self.advanced_all,
+            ".count()": self.advanced_count
+            }
+        # check for valid command
+        for cmd in advanced_args.keys():
+            if cmd in line:
+                return advanced_args[cmd](line)
+        print("*** Unknown syntax: ", line)
+
+    def advanced_all(self, args):
+        """
+        handle <class_name>.all()
+        gets all instances of specific class_name.
+
+        """
+        args_list = args.split(".")
+        self.do_all(args_list[0])
+
+    def advanced_count(self, args):
+        """
+        handle <class_name>.count()
+        number of instance of specific class_name.
+
+        """
+        args_list = args.split(".")
+        objects = self.do_all(args_list[0], to_return=True)
+        if objects:
+            print(len(objects))
 
     def do_create(self, line):
         """
@@ -131,13 +154,12 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** no instance found **")
 
-    def do_all(self, line):
+    def do_all(self, line, to_return=None):
         """
         Prints all string representation of all instances.
 
         """
         output = []
-
         if line and not check_class_exists(self.classes, line.split()[0]):
             print("** class doesn't exist **")
             return
@@ -148,6 +170,8 @@ class HBNBCommand(cmd.Cmd):
                     output.append(object.__str__())
             else:
                 output.append(object.__str__())
+        if to_return:
+            return output
         print(output)
 
     def do_update(self, line):
