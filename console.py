@@ -73,7 +73,8 @@ class HBNBCommand(cmd.Cmd):
         """ Handle advanced args """
         advanced_args = {
             ".all()": self.advanced_all,
-            ".count()": self.advanced_count
+            ".count()": self.advanced_count,
+            ".show(": self.advanced_show
             }
         # check for valid command
         for cmd in advanced_args.keys():
@@ -100,6 +101,16 @@ class HBNBCommand(cmd.Cmd):
         objects = self.do_all(args_list[0], to_return=True)
         if objects:
             print(len(objects))
+
+    def advanced_show(self, args):
+        """
+        handle <class_name>.show(<id>)
+        gets class_name instance of specific <id>.
+
+        """
+        args_list = args.split(".show")
+        id = args_list[1][2:-2]
+        self.do_show("{} {}".format(args_list[0], id))
 
     def do_create(self, line):
         """
