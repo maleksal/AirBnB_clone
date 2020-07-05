@@ -75,7 +75,9 @@ class HBNBCommand(cmd.Cmd):
             ".all()": self.advanced_all,
             ".count()": self.advanced_count,
             ".show(": self.advanced_show,
-            ".destroy(": self.advanced_destroy
+            ".destroy(": self.advanced_destroy,
+            ".update(": self.advanced_update
+
             }
         # check for valid command
         for cmd in advanced_args.keys():
@@ -122,6 +124,23 @@ class HBNBCommand(cmd.Cmd):
         args_list = args.split(".destroy")
         id = args_list[1][2:-2]
         self.do_destroy("{} {}".format(args_list[0], id))
+
+    def advanced_update(self, args):
+        """
+        handle <class_name>.update(<id> <attr> <value>)
+        update an instance of specific <class_name> based on <id>.
+
+        """
+        arguments = args.split('.update')
+        params = shlex.split(arguments[1][1:-1])
+        len_params = len(params)
+        update_arguments = ""
+
+        for i in range(len_params):
+            update_arguments += "{}".format(params[i].strip(','))
+            if i + 1 < len_params:
+                update_arguments += " "
+        self.do_update("{} {}".format(arguments[0], update_arguments))
 
     def do_create(self, line):
         """
