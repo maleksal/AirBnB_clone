@@ -132,6 +132,8 @@ class HBNBCommand(cmd.Cmd):
 
         """
         arguments = args.split('.update')
+        if '{' in arguments[1]:
+            return self.advanced_update_dictionary(args)
         params = shlex.split(arguments[1][1:-1])
         len_params = len(params)
         update_arguments = ""
@@ -141,6 +143,27 @@ class HBNBCommand(cmd.Cmd):
             if i + 1 < len_params:
                 update_arguments += " "
         self.do_update("{} {}".format(arguments[0], update_arguments))
+
+    ''' This code is not completed yet: Logic need to be upfated
+    def advanced_update_dictionary(self, args):
+        """ handle update from dictionary """
+        full_args = args.split('.update')
+        class_name = full_args[0]
+        dictionary_part = full_args[1].partition(',')
+        class_id = dictionary_part[0][1:]
+
+        try:
+            this_dictionary = eval(dictionary_part[2][:-1])
+            print(this_dictionary)
+
+            if not type(this_dictionary) == dict:
+                raise Exception
+        except Exception:
+            this_dictionary = {"":""}
+        for attr, value in this_dictionary.items():
+            self.do_update("{} {} {} {}".format(
+                class_name, class_id, attr, value))
+    '''
 
     def do_create(self, line):
         """
@@ -218,13 +241,24 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         """  Updates an instance based on the class name and id """
 
+        def type_cast_value(obj, attr, value):
+            """
+            Type cast attribute value to attribute type.
+
+            """
+            cast_typing = type(obj.__dict__[attr]).__name__
+            return eval(cast_typing)(value)
+
         if handle_conditions(self.classes, line):
             args = shlex.split(line)
             if len(args) > 2:
                 if len(args) > 3:
                     key = "{}.{}".format(args[0], args[1])
                     if key in storage.all():
-                        setattr(storage.all()[key], args[2], args[3])
+                        value = type_cast_value(
+                            storage.all()[key], args[2], args[3])
+                        print(type(value))
+                        setattr(storage.all()[key], args[2], value)
                         storage.all()[key].save()
                     else:
                         print("** no instance found **")
