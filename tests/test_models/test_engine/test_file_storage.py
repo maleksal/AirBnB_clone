@@ -61,6 +61,10 @@ class TestFileStorage(unittest.TestCase):
         self.assertIsNotNone(FileStorage.save.__doc__)
         self.assertIsNotNone(FileStorage.reload.__doc__)
 
+    def test_base_model_save(self):
+        dummy_instance = BaseModel()
+        dummy_instance.save()
+
     @classmethod
     def tearDown(cls):
         """clear everything"""
