@@ -2,6 +2,7 @@
 """ Console code """
 import cmd
 import shlex
+import re
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -70,20 +71,27 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def default(self, line):
-        """ Handle advanced args """
-        advanced_args = {
-            ".all()": self.advanced_all,
-            ".count()": self.advanced_count,
-            ".show(": self.advanced_show,
-            ".destroy(": self.advanced_destroy,
-            ".update(": self.advanced_update
+        if line is self.intercept_command(line):
+            print("*** Unknown syntax: ", line)
 
-            }
-        # check for valid command
-        for cmd in advanced_args.keys():
-            if cmd in line:
-                return advanced_args[cmd](line)
-        print("*** Unknown syntax: ", line)
+    def intercept_command(self, line):
+        """ Handle advanced args """
+        advanced_args = [
+            ("all", self.advanced_all),
+            ("count", self.advanced_count),
+            ("show", self.advanced_show),
+            ("destroy", self.advanced_destroy),
+            ("update", self.advanced_update)
+        ]
+
+        match = re.search(r"^(\w*)\.(\w+)(?:\(([^)]*)\))$", line)
+        if not match:
+            return line
+
+        cmd = match.group(2)
+        for pattern, function in advanced_args:
+            if cmd == pattern:
+                function(line)
 
     def advanced_all(self, args):
         """
@@ -125,6 +133,13 @@ class HBNBCommand(cmd.Cmd):
         id = args_list[1][2:-2]
         self.do_destroy("{} {}".format(args_list[0], id))
 
+    """
+    advanced_update & advanced_update_dict:
+    -> code serves the purpose of the task, but it's not well written
+    -> code will be improved and reorganized
+
+    """
+
     def advanced_update(self, args):
         """
         handle <class_name>.update(<id> <attr> <value>)
@@ -132,8 +147,12 @@ class HBNBCommand(cmd.Cmd):
 
         """
         arguments = args.split('.update')
-        if '{' in arguments[1]:
-            return self.advanced_update_dictionary(args)
+        dict_found = re.search(r'{.*}', args)
+        if dict_found:
+            return self.advanced_update_dictionary(
+                dict_args=dict_found.group(0),
+                class_name=arguments[0],
+                class_id=arguments[1])
         params = shlex.split(arguments[1][1:-1])
         len_params = len(params)
         update_arguments = ""
@@ -144,26 +163,15 @@ class HBNBCommand(cmd.Cmd):
                 update_arguments += " "
         self.do_update("{} {}".format(arguments[0], update_arguments))
 
-    ''' This code is not completed yet: Logic need to be upfated
-    def advanced_update_dictionary(self, args):
+    def advanced_update_dictionary(self, **kwargs):
         """ handle update from dictionary """
-        full_args = args.split('.update')
-        class_name = full_args[0]
-        dictionary_part = full_args[1].partition(',')
-        class_id = dictionary_part[0][1:]
+        this_dictionary = eval(kwargs['dict_args'])
+        class_id = kwargs['class_id'].split()[0][2:-2]
+        class_name = kwargs['class_name']
 
-        try:
-            this_dictionary = eval(dictionary_part[2][:-1])
-            print(this_dictionary)
-
-            if not type(this_dictionary) == dict:
-                raise Exception
-        except Exception:
-            this_dictionary = {"":""}
         for attr, value in this_dictionary.items():
             self.do_update("{} {} {} {}".format(
                 class_name, class_id, attr, value))
-    '''
 
     def do_create(self, line):
         """
