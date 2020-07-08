@@ -246,8 +246,10 @@ class HBNBCommand(cmd.Cmd):
             Type cast attribute value to attribute type.
 
             """
-            cast_typing = type(obj.__dict__[attr]).__name__
-            return eval(cast_typing)(value)
+            if args[2] in obj.__dict__:
+                cast_typing = type(obj.__dict__[attr]).__name__
+                return eval(cast_typing)(value)
+            return value
 
         if handle_conditions(self.classes, line):
             args = shlex.split(line)
@@ -266,7 +268,6 @@ class HBNBCommand(cmd.Cmd):
                     print("** value missing **")
             else:
                 print("** attribute name missing **")
-
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
